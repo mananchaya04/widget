@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:widget/di/get_it.dart';
 import 'package:widget/entities/product.dart';
 import 'package:widget/network/http/dio_service.dart';
 import 'package:widget/repositories/product_repository.dart';
@@ -25,16 +25,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late final IProductService service;
+  late final IProductService service = getIt.get<IProductService>();
 
   List<List<ProductToDisplay>> products = [];
   List<String> categories = [];
 
   _HomePageState() {
-    final http = DioService('https://fakestoreapi.com');
-    final repo = ProductRepository(http);
-    service = ProductService(repo);
-
     getProducts();
   }
 
