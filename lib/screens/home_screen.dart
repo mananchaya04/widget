@@ -1,21 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:go_router/go_router.dart';
+// import 'package:loading_indicator/loading_indicator.dart';
 import 'package:widget/di/get_it.dart';
 import 'package:widget/entities/product.dart';
-import 'package:widget/network/http/dio_service.dart';
-import 'package:widget/repositories/product_repository.dart';
-import 'package:widget/services/product_service.dart';
-// import 'package:widget/mocks/products.dart';
-import 'package:widget/widgets/compounds/cards/product_card.dart';
+import 'package:widget/mocks/products.dart';
+import 'package:widget/port/product.dart';
 import 'package:widget/widgets/compounds/jumbotron/home_jumbotron.dart';
-import 'package:widget/widgets/compounds/list/product_list.dart';
+import 'package:widget/widgets/compounds/loading/loading_indicator.dart';
 import 'package:widget/widgets/compounds/navbar/home_nav.dart';
 import 'package:widget/widgets/compounds/sections/catalog.dart';
-import 'package:widget/widgets/elements/inputs/search_input.dart';
-
-import '../mocks/products.dart';
-import '../port/product.dart';
+import 'package:widget/widgets/compounds/navbar/bottom_bar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,50 +24,71 @@ class _HomePageState extends State<HomePage> {
   List<List<ProductToDisplay>> products = [];
   List<String> categories = [];
 
-  _HomePageState() {
+  bool isLoading = false;
+
+  @override
+  void initState() {
     getProducts();
+    super.initState();
   }
 
   void getProducts() async {
+    setState(() {
+      isLoading = true;
+    });
+
     final categories = await service.getCategories();
-    final productsFetchers = categories.map((e) => service.getByCategory(e));
-    final products = await Future.wait(productsFetchers);
+    final productFetchers = categories.map((e) => service.getByCategory(e));
+    final products = await Future.wait(productFetchers);
 
     setState(() {
-      this.categories = categories;
       this.products = products;
+      this.categories = categories;
+      isLoading = false;
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: Colors.white,
-        body: SafeArea(
-          child: Column(
-            children: [
-              const HomeNavbar(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: categories.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        HomeJumbotron(
-                            imageUrl: categoryImages[categories[index]]!,
-                            title: categories[index].toUpperCase(),
-                            buttonTitle: 'ViewCollection'
-                        ),
-                        Catalog(title: 'All products',products: products[index]),
-                        const SizedBox(height: 24,)
-                      ],
-                    );
-                  },
-                )
-              ),
-            ],
-          ),
-        ),
-    );
+  void onSelectProduct(ProductToDisplay product) {
+    context.go('/detail' , extra: product);
   }
+
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.white,
+    body: SafeArea(
+      child: Column(
+        children: [
+          const HomeNavbar(),
+          Expanded(
+            child: isLoading
+                ? const Loading()
+                : ListView.builder(
+                    itemCount: categories.length,
+                    itemBuilder: (context, index) {
+                      return Column(
+                        children: [
+                          HomeJumbotron(
+                              imageUrl: categoryImages[categories[index]]!,
+                              title: categories[index].toUpperCase(),
+                              buttonTitle: 'View collection'),
+                          Catalog(
+                            products: products[index],
+                            title: 'All Product',
+                            onSelectProduct: onSelectProduct,
+                          ),
+                          const SizedBox(
+                            height: 24,
+                          )
+                        ],
+                      );
+                    },
+                  ),
+          ),
+        ],
+      ),
+      bottomNavigationBar : BottomBar(currentIndex: 0),
+    ), // Moved BottomBar outside the Column
+  );
+}
 }

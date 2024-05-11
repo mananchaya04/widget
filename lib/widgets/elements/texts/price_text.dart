@@ -11,7 +11,7 @@ class PriceText extends StatelessWidget {
     return Text(
       price,
       style: TextStyle(
-        fontFamily: 'Oswald',
+        fontFamily: 'Rubik',
         color: color ?? Colors.white,
         fontSize: 16,
         fontWeight: FontWeight.w800,

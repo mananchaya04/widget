@@ -8,8 +8,8 @@ class HomeNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      color:Colors.black,
+    return Container(
+      color: Colors.black,
       child: const Padding(
         padding: EdgeInsets.all(8.0),
         child: Row(
@@ -21,14 +21,12 @@ class HomeNavbar extends StatelessWidget {
                 onPressed: null,
                 icon: Icon(
                   Icons.info_outline_rounded,
-                  color: Colors.white,
+                  color: Colors.white70,
                   size: 40,
-                )
-            ),
+                )),
           ],
         ),
       ),
     );
   }
-
 }

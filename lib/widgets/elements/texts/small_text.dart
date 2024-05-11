@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class SmallText extends StatelessWidget {
-
   final String title;
   final Color? color;
 
@@ -9,18 +8,9 @@ class SmallText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 100,
-      child: Text(
-        title,
-        overflow: TextOverflow.ellipsis,
-        style: TextStyle(
-
-            fontFamily: 'Montserrat',
-            color: color ?? Colors.black
-        ),
-      ),
+    return Text(
+      title,
+      style: TextStyle(fontFamily: 'Rubik', color: color ?? Colors.black),
     );
   }
-
 }

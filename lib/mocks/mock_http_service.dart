@@ -28,5 +28,4 @@ class MockHttpService extends HttpService {
   Future put(String path, data) async {
     return returnData;
   }
-
 }

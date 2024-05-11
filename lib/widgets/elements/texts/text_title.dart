@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class TextTitle extends StatelessWidget {
-
   final String title;
   final Color? color;
 
@@ -12,12 +11,11 @@ class TextTitle extends StatelessWidget {
     return Text(
       title,
       style: TextStyle(
-        fontFamily: 'Montserrat',
+        fontFamily: 'Rubik',
         color: color ?? const Color(0xFF222222),
         fontSize: 24,
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
-
 }
